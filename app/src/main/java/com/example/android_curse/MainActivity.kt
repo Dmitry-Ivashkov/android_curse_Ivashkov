@@ -54,8 +54,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        findViewById<RecyclerView>(R.id.recyclerView).isVisible = false
-        findViewById<View>(R.id.progressBar).isVisible = true
+//        findViewById<RecyclerView>(R.id.recyclerView).isVisible = false
+//        findViewById<View>(R.id.progressBar).isVisible = true
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.viewState.collect { viewState ->
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(): UserAdapter {
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
+        val recyclerView = binding.recyclerView.apply {
             layoutManager =
                 LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(
