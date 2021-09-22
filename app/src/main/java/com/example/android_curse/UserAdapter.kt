@@ -8,10 +8,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
+
+var userList : StateFlow<List<User>> = flow<List<User>> {  }.stateIn(GlobalScope, SharingStarted.Eagerly, listOf()) //TODO(Scope)
 
 class UserAdapter : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
-
-    var userList = emptyList<User>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView =
@@ -20,16 +25,15 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder.avatarInageView.setImageResource(R.mipmap.ic_launcher)
         Glide.with(holder.avatarInageView)
-            .load(userList[position].avatarUrl)
+            .load(userList.value[position].avatarUrl)
             .circleCrop()
             .into(holder.avatarInageView)
-        holder.userNameTextView.text = userList[position].userName
-        holder.groupNameTextView.text = userList[position].groupName
+        holder.userNameTextView.text = userList.value[position].userName
+        holder.groupNameTextView.text = userList.value[position].groupName
     }
 
-    override fun getItemCount() = userList.size
+    override fun getItemCount() = userList.value.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val avatarInageView = itemView.findViewById<ImageView>(R.id.avatarImageView)

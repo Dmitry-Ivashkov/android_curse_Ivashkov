@@ -1,12 +1,10 @@
 package com.example.android_curse
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -14,15 +12,21 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainViewModel : ViewModel() {
 
-    var viewState: StateFlow<ViewState> = flow<ViewState> { ViewState.Data(loadUsers()) }.stateIn(viewModelScope,
-        SharingStarted.Eagerly, ViewState.Loading)//ViewState.Loading
+    companion object {
+        val logTag = "MyMainActivity"
+    }
 
-//    init {
-//        viewModelScope.launch {
-//            viewState = ViewState.Loading
-//            viewState = ViewState.Data(loadUsers())
-//        }
-//    }
+    private val _viewState = MutableStateFlow<ViewState>(ViewState.Loading)
+
+    val viewState: Flow<ViewState> get() = _viewState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _viewState.emit(ViewState.Loading)
+            val userList = loadUsers()
+            _viewState.emit(ViewState.Data(userList))
+        }
+    }
 
     sealed class ViewState {
         object Loading : ViewState()
@@ -30,7 +34,8 @@ class MainViewModel : ViewModel() {
     }
 
     private suspend fun loadUsers(): List<User> {
-//        Thread.sleep(2000)
+//        return  whithco Log.d(logTag,"loadUsers()")
+        Thread.sleep(2000)
         return provideApi().getUsers().data
     }
 

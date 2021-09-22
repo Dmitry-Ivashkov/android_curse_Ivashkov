@@ -1,10 +1,11 @@
 package com.example.android_curse
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -14,13 +15,16 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android_curse.databinding.ActivityMainBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     val viewModel: MainViewModel by viewModels()
 
-    private lateinit var binding :ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+//    private val viewBinding by viewBinding(ActivityMainBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,19 +36,33 @@ class MainActivity : AppCompatActivity() {
 
         binding.mainViewModel = viewModel
 
-        findViewById<RecyclerView>(R.id.recyclerView).isVisible=false
-        findViewById<View>(R.id.progressBar).isVisible=true
+//        adapter.userList =
+//            viewModel.viewState.map {
+//                when (it) {
+//                    MainViewModel.ViewState.Loading -> {
+//                        findViewById<RecyclerView>(R.id.recyclerView).isVisible = false
+//                        findViewById<View>(R.id.progressBar).isVisible = true
+//                        listOf<User>()
+//                    }
+//                    else -> {
+//                        findViewById<RecyclerView>(R.id.recyclerView).isVisible = true
+//                        findViewById<View>(R.id.progressBar).isVisible = false
+//                        (it as MainViewModel.ViewState.Data).userList
+//                    }
+//                }
+//            }.stateIn(lifecycleScope, SharingStarted.Eagerly, listOf())
 
-//        adapter.userList=
 
-//        lifecycleScope.launch {
-//            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                adapter.userList = viewModel.viewState
-//                adapter.notifyDataSetChanged()
-//                findViewById<RecyclerView>(R.id.recyclerView).isVisible=true
-//                findViewById<View>(R.id.progressBar).isVisible=false
-//            }
-//        }
+
+        findViewById<RecyclerView>(R.id.recyclerView).isVisible = false
+        findViewById<View>(R.id.progressBar).isVisible = true
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.viewState.collect { viewState ->
+                    renderViewState(viewState)
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView(): UserAdapter {
@@ -63,6 +81,27 @@ class MainActivity : AppCompatActivity() {
         val adapter = UserAdapter()
         recyclerView.adapter = adapter
         return adapter
+    }
+
+    private fun renderViewState(viewState: MainViewModel.ViewState) {
+        when (viewState) {
+            is MainViewModel.ViewState.Loading -> {
+                binding.recyclerView.isVisible = false
+                binding.progressBar.isVisible = true
+            }
+            is MainViewModel.ViewState.Data -> {
+                binding.recyclerView.isVisible = true
+                (binding.recyclerView.adapter as UserAdapter).apply {
+                    userList = flow<List<User>> { }.stateIn(
+                        GlobalScope,
+                        SharingStarted.Eagerly,
+                        viewState.userList
+                    )
+//                    notifyDataSetChanged()
+                }
+                binding.progressBar.isVisible = false
+            }
+        }
     }
 
 }
