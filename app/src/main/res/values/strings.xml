@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">android_curse</string>
+    <string name="onboarding_view_pager_text_1">Осень 2021 г., СПбГУ</string>
+    <string name="onboarding_view_pager_text_2">Мы изучаем разработку под Android</string>
+    <string name="onboarding_view_pager_text_3">Добро пожаловатьв команду</string>
+    <string name="onboarding_sign_in_button">Войти</string>
+    <string name="onboarding_sign_Up_button">Зарегистрироваться</string>
 </resources>

@@ -39,15 +39,15 @@ class MainActivity : AppCompatActivity() {
 //        adapter.userList =
 //            viewModel.viewState.map {
 //                when (it) {
-//                    MainViewModel.ViewState.Loading -> {
+//                    is MainViewModel.ViewState.Loading -> {
 //                        findViewById<RecyclerView>(R.id.recyclerView).isVisible = false
 //                        findViewById<View>(R.id.progressBar).isVisible = true
-//                        listOf<User>()
+//                        listOf()
 //                    }
-//                    else -> {
+//                    is MainViewModel.ViewState.Data -> {
 //                        findViewById<RecyclerView>(R.id.recyclerView).isVisible = true
 //                        findViewById<View>(R.id.progressBar).isVisible = false
-//                        (it as MainViewModel.ViewState.Data).userList
+//                        it.userList
 //                    }
 //                }
 //            }.stateIn(lifecycleScope, SharingStarted.Eagerly, listOf())
@@ -91,14 +91,7 @@ class MainActivity : AppCompatActivity() {
             }
             is MainViewModel.ViewState.Data -> {
                 binding.recyclerView.isVisible = true
-                (binding.recyclerView.adapter as UserAdapter).apply {
-                    userList = flow<List<User>> { }.stateIn(
-                        GlobalScope,
-                        SharingStarted.Eagerly,
-                        viewState.userList
-                    )
-//                    notifyDataSetChanged()
-                }
+                (binding.recyclerView.adapter as UserAdapter).userList.value = viewState.userList
                 binding.progressBar.isVisible = false
             }
         }

@@ -9,14 +9,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
-
-var userList : StateFlow<List<User>> = flow<List<User>> {  }.stateIn(GlobalScope, SharingStarted.Eagerly, listOf()) //TODO(Scope)
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class UserAdapter : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+
+    var userList = MutableStateFlow(emptyList<User>())
+
+    init {
+        GlobalScope.launch {
+            userList.collect {
+                notifyDataSetChanged()
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView =
