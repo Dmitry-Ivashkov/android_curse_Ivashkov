@@ -1,27 +1,27 @@
-package com.example.android_curse
+package com.example.android_curse.ui.userlist
 
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.android_curse.R
 import com.example.android_curse.databinding.ActivityMainBinding
-import kotlinx.coroutines.GlobalScope
+import com.example.android_curse.ui.base.BaseFragment
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class UserListFragment : BaseFragment(R.layout.activity_main) {
 
-    val viewModel: MainViewModel by viewModels()
+    val viewModel: UserListViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
 //    private val viewBinding by viewBinding(ActivityMainBinding::bind)
@@ -29,12 +29,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+//        setContentView()
 
-        val adapter = setupRecyclerView()
-
-        binding.mainViewModel = viewModel
 
 //        adapter.userList =
 //            viewModel.viewState.map {
@@ -53,11 +49,13 @@ class MainActivity : AppCompatActivity() {
 //            }.stateIn(lifecycleScope, SharingStarted.Eagerly, listOf())
 
 
-
 //        findViewById<RecyclerView>(R.id.recyclerView).isVisible = false
 //        findViewById<View>(R.id.progressBar).isVisible = true
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+        binding.recyclerView.isVisible = false
+        binding.progressBar.isVisible = true
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.viewState.collect { viewState ->
                     renderViewState(viewState)
                 }
@@ -65,16 +63,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupRecyclerView(): UserAdapter {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        binding = ActivityMainBinding.inflate(inflater)
+//        binding.mainViewModel = viewModel
+
+
+        val adapter = setupRecyclerView(inflater, container)
+
+        super.onCreateView(inflater, container, savedInstanceState)
+        return binding.root
+    }
+
+    private fun setupRecyclerView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+    ): UserAdapter {
         val recyclerView = binding.recyclerView.apply {
             layoutManager =
-                LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+//                inflater.inflate(R.layout.activity_main, container)
+                LinearLayoutManager(
+                    this@UserListFragment.context,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
+
             addItemDecoration(
                 DividerItemDecoration(
-                    this@MainActivity,
+                    this@UserListFragment.context,
                     DividerItemDecoration.VERTICAL
                 ).apply {
-                    ContextCompat.getDrawable(this@MainActivity, R.drawable.item_divider)
+                    ContextCompat.getDrawable(
+                        this@UserListFragment.requireContext(),
+                        R.drawable.item_divider
+                    )
                         ?.let { setDrawable(it) }
                 })
         }
@@ -83,13 +109,13 @@ class MainActivity : AppCompatActivity() {
         return adapter
     }
 
-    private fun renderViewState(viewState: MainViewModel.ViewState) {
+    private fun renderViewState(viewState: UserListViewModel.ViewState) {
         when (viewState) {
-            is MainViewModel.ViewState.Loading -> {
+            is UserListViewModel.ViewState.Loading -> {
                 binding.recyclerView.isVisible = false
                 binding.progressBar.isVisible = true
             }
-            is MainViewModel.ViewState.Data -> {
+            is UserListViewModel.ViewState.Data -> {
                 binding.recyclerView.isVisible = true
                 (binding.recyclerView.adapter as UserAdapter).userList.value = viewState.userList
                 binding.progressBar.isVisible = false

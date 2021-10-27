@@ -1,16 +1,19 @@
-package com.example.android_curse
+package com.example.android_curse.ui.userlist
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android_curse.Api
+import com.example.android_curse.entity.User
+import com.example.android_curse.ui.base.BaseViewModel
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class MainViewModel : ViewModel() {
+class UserListViewModel : BaseViewModel() {
 
     companion object {
         val logTag = "MyMainActivity"

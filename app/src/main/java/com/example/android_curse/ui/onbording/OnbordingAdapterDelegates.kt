@@ -1,4 +1,4 @@
-package com.example.android_curse
+package com.example.android_curse.ui.onbording
 
 import com.example.android_curse.databinding.ItemOnboardingTextBinding
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding

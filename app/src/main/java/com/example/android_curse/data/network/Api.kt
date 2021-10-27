@@ -1,5 +1,6 @@
 package com.example.android_curse
 
+import com.example.android_curse.entity.User
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import retrofit2.http.GET

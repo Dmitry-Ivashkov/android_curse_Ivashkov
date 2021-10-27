@@ -1,4 +1,4 @@
-package com.example.android_curse
+package com.example.android_curse.entity
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

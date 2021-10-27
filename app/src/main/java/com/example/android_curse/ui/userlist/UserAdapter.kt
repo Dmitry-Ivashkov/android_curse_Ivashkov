@@ -1,4 +1,4 @@
-package com.example.android_curse
+package com.example.android_curse.ui.userlist
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.example.android_curse.R
+import com.example.android_curse.entity.User
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class UserAdapter : RecyclerView.Adapter<UserAdapter.ViewHolder>() {

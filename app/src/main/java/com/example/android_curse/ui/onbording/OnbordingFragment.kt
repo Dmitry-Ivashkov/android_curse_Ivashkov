@@ -1,13 +1,14 @@
-package com.example.android_curse
+package com.example.android_curse.ui.onbording
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.android_curse.databinding.ActivityMainBinding
+import com.example.android_curse.R
 import com.example.android_curse.databinding.FragmentOnbordingBinding
+import com.example.android_curse.ui.base.BaseFragment
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -16,7 +17,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 
-class OnbordingFragment : Fragment(R.layout.fragment_onbording){
+class OnbordingFragment : BaseFragment(R.layout.fragment_onbording) {
 
     private val viewBinding by viewBinding(FragmentOnbordingBinding::bind)
 //    private lateinit var binding: FragmentOnbordingBinding
@@ -28,16 +29,16 @@ class OnbordingFragment : Fragment(R.layout.fragment_onbording){
 
 //        binding = FragmentOnbordingBinding.inflate(layoutInflater)
 
-         //TODO()
+        //TODO()
 //        viewBinding.playerView.player = player!!  //TODO()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        player=SimpleExoPlayer.Builder(requireContext()).build().apply {
+        player = SimpleExoPlayer.Builder(requireContext()).build().apply {
             addMediaItem(MediaItem.fromUri("asset:///VID_20190615_173334.mp4"))
-            repeatMode=Player.REPEAT_MODE_ALL
+            repeatMode = Player.REPEAT_MODE_ALL
             prepare()
         }
 
@@ -48,11 +49,14 @@ class OnbordingFragment : Fragment(R.layout.fragment_onbording){
 
         viewBinding.signInButton.setOnClickListener {
 //            TODO()
-            Toast.makeText(requireContext(), "нажата текста войти",Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_onbordingFragment_to_signInFragment)
+            Toast.makeText(requireContext(), "нажата текста войти", Toast.LENGTH_SHORT).show()
         }
         viewBinding.signUpButton.setOnClickListener {
+            findNavController().navigate(R.id.action_onbordingFragment_to_signUpFragment)
+
 //            TODO()
-            Toast.makeText(requireContext(), "нажата текста регистрации",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "нажата текста регистрации", Toast.LENGTH_SHORT).show()
         }
 
     }
