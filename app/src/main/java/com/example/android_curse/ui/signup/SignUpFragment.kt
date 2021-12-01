@@ -26,9 +26,11 @@ import com.example.android_curse.R
 import com.example.android_curse.databinding.FragmentSignUpBinding
 import com.example.android_curse.ui.base.BaseFragment
 import com.example.android_curse.util.getSpannedString
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SignUpFragment : BaseFragment(R.layout.fragment_sign_up) {
     private val viewModel: SignUpViewModel by viewModels()
     private val viewBinding by viewBinding(FragmentSignUpBinding::bind)

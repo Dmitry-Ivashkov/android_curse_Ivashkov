@@ -1,10 +1,13 @@
 package com.example.android_curse.ui.userlist
 
 import androidx.lifecycle.viewModelScope
-import com.example.android_curse.Api
+import com.example.android_curse.data.network.Api
 import com.example.android_curse.entity.User
+import com.example.android_curse.interactor.UsersInteractor
 import com.example.android_curse.ui.base.BaseViewModel
+import com.haroldadmin.cnradapter.NetworkResponse
 import com.squareup.moshi.Moshi
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,12 +15,12 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Inject
 
-class UserListViewModel : BaseViewModel() {
-
-    companion object {
-        val logTag = "MyMainActivity"
-    }
+@HiltViewModel
+class UserListViewModel @Inject constructor(
+    private val usersInteractor : UsersInteractor
+) : BaseViewModel() {
 
     private val _viewState = MutableStateFlow<ViewState>(ViewState.Loading)
 
@@ -26,8 +29,8 @@ class UserListViewModel : BaseViewModel() {
     init {
         viewModelScope.launch {
             _viewState.emit(ViewState.Loading)
-            val userList = loadUsers()
-            _viewState.emit(ViewState.Data(userList))
+            loadUsers()
+//            _viewState.emit(ViewState.Data(userList))
         }
     }
 
@@ -36,27 +39,21 @@ class UserListViewModel : BaseViewModel() {
         data class Data(val userList: List<User>) : ViewState()
     }
 
-    private suspend fun loadUsers(): List<User> {
-//        return  whithco Log.d(logTag,"loadUsers()")
-        Thread.sleep(2000)
-        return provideApi().getUsers().data
-    }
+//    init {
+//        loadUsers()
+//    }
 
-    private fun provideApi(): Api {
-        return Retrofit.Builder()
-            .client(provideOkHttpClient())
-            .baseUrl("https://reqres.in/api/")
-            .addConverterFactory(MoshiConverterFactory.create(provideMoshi()))
-            .build()
-            .create(Api::class.java)
-    }
-
-    private fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder().build()
-    }
-
-    private fun provideMoshi(): Moshi {
-        return Moshi.Builder().build()
+    private fun loadUsers() {
+        viewModelScope.launch {
+            _viewState.emit(ViewState.Loading)
+            when (val response = usersInteractor.loadUsers()){
+                is NetworkResponse.Success -> {
+                    _viewState.emit(ViewState.Data(response.body))
+                }
+                else -> {
+                }
+            }
+        }
     }
 
 }

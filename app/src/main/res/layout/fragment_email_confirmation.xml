@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageButton
+        style="@style/Widget.AppCompat.ImageButton"
         android:id="@+id/backButton"
         android:layout_width="48dp"
         android:layout_height="48dp"

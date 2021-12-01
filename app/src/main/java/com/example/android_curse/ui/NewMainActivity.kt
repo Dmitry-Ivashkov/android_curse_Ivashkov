@@ -3,31 +3,35 @@ package com.example.android_curse.ui
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.android_curse.R
-import com.example.android_curse.databinding.ActivityMainBinding
+import com.example.android_curse.databinding.NewActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class NewMainActivity : AppCompatActivity(R.layout.new_activity_main) {
 
     val viewModel: NewMainViewModel by viewModels()
 
-    private val viewBinding by viewBinding(ActivityMainBinding::bind)
+    private val viewBinding by viewBinding(NewActivityMainBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         subscribeToAuthorizationStatus()
+        WindowCompat.setDecorFitsSystemWindows(window,false)
         super.onCreate(savedInstanceState)
     }
 
     private fun subscribeToAuthorizationStatus() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isAuthorizedFlow.collect {
+                viewModel.isAuthorizedFlow().collect {
                     showSuitableNavigationFlow(it)
                 }
             }
