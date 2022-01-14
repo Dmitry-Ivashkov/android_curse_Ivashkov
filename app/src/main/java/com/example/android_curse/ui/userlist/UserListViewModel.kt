@@ -36,6 +36,8 @@ class UserListViewModel @Inject constructor(
 
     sealed class ViewState {
         object Loading : ViewState()
+        object Error : ViewState()
+        object EmptyList : ViewState()
         data class Data(val userList: List<User>) : ViewState()
     }
 
@@ -48,9 +50,15 @@ class UserListViewModel @Inject constructor(
             _viewState.emit(ViewState.Loading)
             when (val response = usersInteractor.loadUsers()){
                 is NetworkResponse.Success -> {
-                    _viewState.emit(ViewState.Data(response.body))
+                    val userList = response.body
+                    if (userList.isEmpty()){
+                        _viewState.emit(ViewState.EmptyList)
+                    }else {
+                        _viewState.emit(ViewState.Data(userList))
+                    }
                 }
                 else -> {
+                    _viewState.emit(ViewState.Error)
                 }
             }
         }

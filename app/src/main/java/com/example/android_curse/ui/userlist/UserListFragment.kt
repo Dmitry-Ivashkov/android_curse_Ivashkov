@@ -81,11 +81,25 @@ class UserListFragment : BaseFragment(R.layout.fragment_list_users) {
             is UserListViewModel.ViewState.Loading -> {
                 viewBinding.recyclerView.isVisible = false
                 viewBinding.progressBar.isVisible = true
+                viewBinding.errorText.isVisible = false
             }
             is UserListViewModel.ViewState.Data -> {
                 viewBinding.recyclerView.isVisible = true
                 (viewBinding.recyclerView.adapter as UserAdapter).userList.value = viewState.userList
                 viewBinding.progressBar.isVisible = false
+                viewBinding.errorText.isVisible = false
+            }
+            is UserListViewModel.ViewState.EmptyList -> {
+                viewBinding.recyclerView.isVisible = false
+                viewBinding.progressBar.isVisible = false
+                viewBinding.errorText.isVisible = true
+                viewBinding.errorText.text="увы у вас пока нет друзей"
+            }
+            is UserListViewModel.ViewState.Error -> {
+                viewBinding.recyclerView.isVisible = false
+                viewBinding.progressBar.isVisible = false
+                viewBinding.errorText.isVisible = true
+                viewBinding.errorText.text="возникла какае-та ошибка"
             }
         }
     }
