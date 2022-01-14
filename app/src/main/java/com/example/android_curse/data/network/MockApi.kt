@@ -22,7 +22,7 @@ class MockApi : Api {
                     lastName = "bi",
                     userName = "biBob"
                 )
-            ),
+            ).flatMap { listOf(it, it, it, it, it, it) }.flatMap { listOf(it, it, it, it, it, it) },
             code=200
         )
     }
