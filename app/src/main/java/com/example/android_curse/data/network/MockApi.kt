@@ -6,9 +6,11 @@ import com.example.android_curse.data.network.request.SignInWithEmailRequest
 import com.example.android_curse.data.network.response.VerificationTokenResponse
 import com.example.android_curse.data.network.response.error.*
 import com.example.android_curse.entity.AuthTokens
+import com.example.android_curse.entity.Lakes
 import com.example.android_curse.entity.Post
 import com.example.android_curse.entity.User
 import com.haroldadmin.cnradapter.NetworkResponse
+import com.squareup.moshi.Json
 
 class MockApi : Api {
     override suspend fun getUsers(): NetworkResponse<List<User>, Unit> {
@@ -61,6 +63,20 @@ class MockApi : Api {
     }
 
     override suspend fun getPosts(): NetworkResponse<List<Post>, Unit> {
-        TODO("Not yet implemented")
+        return NetworkResponse.Success(
+            listOf(
+                Post(
+                    id = 7,
+                    linkUrl = null,
+                    imageUrl = null,
+                    title = "aaaaaaaaaaaaaa",
+                    text = null,
+                    createAt = "",
+                    updateAt = "",
+                    likes = Lakes(listOf(),15)
+                )
+            ),
+            code=200
+        )
     }
 }

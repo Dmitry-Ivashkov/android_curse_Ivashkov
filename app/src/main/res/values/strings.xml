@@ -1,6 +1,10 @@
+<!DOCTYPE resources [
+    <!-- Non-breaking space, U+00A0. -->
+    <!ENTITY nbsp "&#160;">
+    ]>
 <resources>
     <string name="app_name">android_curse</string>
-    <string name="onboarding_view_pager_text_1">Осень 2021 г., СПбГУ</string>
+    <string name="onboarding_view_pager_text_1">Осень 2021&nbsp;г., СПбГУ</string>
     <string name="onboarding_view_pager_text_2">Мы изучаем разработку под Android</string>
     <string name="onboarding_view_pager_text_3">Добро пожаловатьв команду</string>
     <string name="onboarding_sign_in_button">Войти</string>
@@ -28,4 +32,5 @@
     <string name="profile_logout_button_text">Выйти</string>
     <string name="common_general_error_text">упс, что-то пошло не так</string>
     <string name="news_toolbar_title">мобильная разроботка</string>
+    <string name="common_counter_prefix">+%d</string>
 </resources>
