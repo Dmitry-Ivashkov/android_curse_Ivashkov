@@ -10,4 +10,5 @@
     <color name="gray">#CCCCCC</color>
     <color name="orange">#FF9800</color>
     <color name="green_blue">#1ECECA</color>
+    <color name="color_post_like_border">#FF9800</color>
 </resources>
